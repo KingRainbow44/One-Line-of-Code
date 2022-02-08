@@ -20,6 +20,19 @@
             <artifactId>jda</artifactId>
             <version>5.0.0-alpha.3</version>
         </dependency>
+        
+        <!-- Logger -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.objecthunter</groupId>
+            <artifactId>exp4j</artifactId>
+            <version>0.4.8</version>
+        </dependency>
     </dependencies>
 
 </project>
