@@ -10,6 +10,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.xigam.onelineofcode.listeners.ActivityListener;
+import tech.xigam.onelineofcode.listeners.MessageListener;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 
 import java.net.InetSocketAddress;
@@ -22,21 +23,26 @@ public final class OneLineOfCode extends WebSocketServer {
     public static WebSocket client;
     public static Logger logger = LoggerFactory.getLogger(OneLineOfCode.class);
     
-    public static void main(String[] args) {
-        if(args.length < 1) {
-            System.out.println("Usage: java -jar OneLineOfCode.jar <token>");
-            System.exit(1); return;
+    static {
+        if(!Constants.check()) {
+            logger.error("One or more critical constants are missing.");
+            System.exit(0);
         }
-        
+    }
+    
+    public static void main(String[] args) {
         try {
-            var jda = JDABuilder.create(args[0], EnumSet.allOf(GatewayIntent.class))
-                    .setActivity(Activity.competing("a tennis game"))
-                    .addEventListeners(new ActivityListener())
+            var jda = JDABuilder.create(Constants.BOT_AUTHORIZATION, EnumSet.allOf(GatewayIntent.class))
+                    .setActivity(Activity.competing("a tennis match"))
+                    .addEventListeners(new ActivityListener(), new MessageListener())
                     .enableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS);
             
             OneLineOfCode.jda = jda.build();
             continueSetup(); // Continue setting extra variables.
-        } catch (Exception ignored) { }
+        } catch (Exception exception) {
+            logger.error("An error occurred while initializing JDA.", exception);
+            System.exit(0);
+        }
     }
     
     private static void continueSetup() {
