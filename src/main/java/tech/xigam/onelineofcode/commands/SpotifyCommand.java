@@ -9,7 +9,7 @@ import tech.xigam.onelineofcode.utils.MessageUtil;
 public final class SpotifyCommand extends Command implements Baseless {
     public SpotifyCommand() {
         super("spotify", "Spotify-related commands in one package.");
-        
+
         registerSubCommand(new PlaySubCommand());
     }
 

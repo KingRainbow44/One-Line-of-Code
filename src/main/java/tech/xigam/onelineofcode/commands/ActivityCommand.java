@@ -10,7 +10,7 @@ import tech.xigam.onelineofcode.utils.MessageUtil;
 public final class ActivityCommand extends Command implements Baseless {
     public ActivityCommand() {
         super("activity", "Set the bot's current activity.");
-        
+
         registerSubCommand(new StatusSubCommand());
         registerSubCommand(new PresenceSubCommand());
     }

@@ -19,11 +19,11 @@ public final class DeployCommand extends Command implements Arguments {
 
     @Override
     public void execute(Interaction interaction) {
-        if(!interaction.getMember().getId().matches(Constants.MAGIX_USER_ID)) {
+        if (!interaction.getMember().getId().matches(Constants.MAGIX_USER_ID)) {
             interaction.reply(MessageUtil.genericEmbed("You do not have permission to use this command."));
             return;
         }
-        
+
         boolean isGlobal = interaction.getArgument("global", false, Boolean.class);
         interaction.reply(MessageUtil.genericEmbed("Deploying slash-commands " + (isGlobal ? "globally" : "here") + "..."));
         OneLineOfCode.commandHandler.deployAll(isGlobal ? null : interaction.getGuild());

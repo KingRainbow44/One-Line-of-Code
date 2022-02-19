@@ -21,17 +21,18 @@ public final class SpotifyInstance {
         this.authorizationCode = authorizationCode;
         this.startRefresh();
     }
-    
+
     private void startRefresh() {
         try {
             var auth = this.spotifyApi.authorizationCode(this.authorizationCode).build().execute();
-            this.spotifyApi.setAccessToken(auth.getAccessToken()); this.spotifyApi.setRefreshToken(auth.getRefreshToken());
+            this.spotifyApi.setAccessToken(auth.getAccessToken());
+            this.spotifyApi.setRefreshToken(auth.getRefreshToken());
             new SpotifyRefreshTask(this.spotifyApi).start();
         } catch (Exception exception) {
             OneLineOfCode.logger.warn("Failed to start refresh", exception);
         }
     }
-    
+
     @Nullable
     public CurrentlyPlaying getPlayingTrack() {
         try {

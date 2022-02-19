@@ -6,8 +6,12 @@ import tech.xigam.onelineofcode.utils.spotify.SpotifyInstance;
 
 public final class SpotifyEndpoints {
     public static void callbackEndpoint(Request request) {
+        if(OneLineOfCode.spotifyInstance != null) {
+            request.code(302).respond("Authorization has already been completed.");
+            return;
+        }
         var code = request.requestArguments.getOrDefault("code", "");
-        if(code.isEmpty()) {
+        if (code.isEmpty()) {
             request.respond("No code provided.");
             return;
         }

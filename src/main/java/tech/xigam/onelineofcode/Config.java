@@ -10,6 +10,7 @@ public final class Config {
 
     /**
      * Get a value from the config.
+     *
      * @param key The key to find.
      * @return String
      */
@@ -20,6 +21,7 @@ public final class Config {
 
     /**
      * Get all config entries.
+     *
      * @return Set<DotenvEntry>
      */
 

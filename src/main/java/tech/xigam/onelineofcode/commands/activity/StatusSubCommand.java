@@ -20,19 +20,20 @@ public final class StatusSubCommand extends SubCommand implements Arguments {
 
     @Override
     public void execute(Interaction interaction) {
-        if(!interaction.getMember().getId().matches(Constants.MAGIX_USER_ID)) {
+        if (!interaction.getMember().getId().matches(Constants.MAGIX_USER_ID)) {
             interaction.reply(MessageUtil.genericEmbed("You do not have permission to use this command."));
             return;
         }
-        
+
         var status = interaction.getArgument("status", String.class);
-        var jda = OneLineOfCode.jda; OnlineStatus onlineStatus;
-        switch(status) {
+        var jda = OneLineOfCode.jda;
+        OnlineStatus onlineStatus;
+        switch (status) {
             default -> {
                 interaction.reply(MessageUtil.genericEmbed("Invalid status."));
                 return;
             }
-            
+
             case "online" -> onlineStatus = OnlineStatus.ONLINE;
             case "idle" -> onlineStatus = OnlineStatus.IDLE;
             case "dnd" -> onlineStatus = OnlineStatus.DO_NOT_DISTURB;

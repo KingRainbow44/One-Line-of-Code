@@ -9,11 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 public final class SpotifyRefreshTask extends Thread {
     private final SpotifyApi spotifyApi;
-    
+
     public SpotifyRefreshTask(SpotifyApi spotifyApi) {
         this.spotifyApi = spotifyApi;
     }
-    
+
     @Override
     public void run() {
         new Timer().scheduleAtFixedRate(new TimerTask() {

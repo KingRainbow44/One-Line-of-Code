@@ -1,5 +1,0 @@
-Day 1 - Competing in a tennis game.
-Day 2 - Sending a message when Bluejay goes offline & online.
-Day 3 - Playing what Magix is playing on Spotify on command.
-Day 4 - Magix related RESTful API.
-Day 5 - Ping Magix's phone on command.
