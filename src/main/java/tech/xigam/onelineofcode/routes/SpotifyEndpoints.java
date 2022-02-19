@@ -5,6 +5,9 @@ import tech.xigam.onelineofcode.OneLineOfCode;
 import tech.xigam.onelineofcode.utils.spotify.SpotifyInstance;
 
 public final class SpotifyEndpoints {
+    /**
+     * /spotify/callback/
+     */
     public static void callbackEndpoint(Request request) {
         if(OneLineOfCode.spotifyInstance != null) {
             request.code(302).respond("Authorization has already been completed.");

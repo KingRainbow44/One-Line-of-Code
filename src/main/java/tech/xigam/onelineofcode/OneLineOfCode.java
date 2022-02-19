@@ -19,14 +19,17 @@ import tech.xigam.onelineofcode.listeners.ActivityListener;
 import tech.xigam.onelineofcode.routes.GenericEndpoints;
 import tech.xigam.onelineofcode.routes.SpotifyEndpoints;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
+import tech.xigam.onelineofcode.utils.absolute.RPCClient;
 import tech.xigam.onelineofcode.utils.spotify.SpotifyInstance;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.OffsetDateTime;
 import java.util.EnumSet;
 
 public final class OneLineOfCode extends WebSocketServer {
     public static final ComplexCommandHandler commandHandler = new ComplexCommandHandler(true);
+    public static final OffsetDateTime start = OffsetDateTime.now();
     public static JDA jda;
     public static User magix;
     public static WebSocket client;
@@ -69,6 +72,9 @@ public final class OneLineOfCode extends WebSocketServer {
 
         // Create the web socket server.
         new OneLineOfCode(8080).start();
+        
+        // Start the Discord Rich Presence.
+        RPCClient.initialize();
 
         // Setup command handler.
         commandHandler.setJda(OneLineOfCode.jda);
@@ -78,9 +84,8 @@ public final class OneLineOfCode extends WebSocketServer {
         commandHandler.registerCommand(new ActivityCommand());
         commandHandler.registerCommand(new SpotifyCommand());
         commandHandler.registerCommand(new HowLongCommand());
-
-        // Setup Express.
-        try {
+        
+        try { // Setup Express.
             var router = new Router()
                     .get("/", GenericEndpoints::indexEndpoint);
 
@@ -90,8 +95,7 @@ public final class OneLineOfCode extends WebSocketServer {
             Express.create(42069)
                     .notFound(GenericEndpoints::notFoundEndpoint)
                     .router(router).listen();
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) { }
     }
 
     @Override

@@ -23,10 +23,12 @@ public final class HowLongCommand extends Command implements Arguments {
     private static final String BLUEJAY_ONLINE = "Bluejay was last online";
     private static final String MAGIX_BORN = "Magix was born";
     private static final String LEQEND_SIMP = "the day レケンド met his simp";
+    private static final String START_GENSHIN = "Magix started playing Genshin Impact";
     private final String[] options = new String[]{
             "Bluejay was last online",
             "Magix was born",
-            "the day レケンド met his simp"
+            "the day レケンド met his simp",
+            "Magix started playing Genshin Impact"
     };
 
     public HowLongCommand() {
@@ -41,7 +43,8 @@ public final class HowLongCommand extends Command implements Arguments {
 
             case BLUEJAY_ONLINE -> {
                 interaction.deferReply();
-                var status = Objects.requireNonNull(Objects.requireNonNull(OneLineOfCode.jda.getGuildById(Constants.XIGAM_SERVER_ID)).getMember(User.fromId(Constants.BLUEJAY_USER_ID))).getOnlineStatus();
+                var status = Objects.requireNonNull(Objects.requireNonNull(OneLineOfCode.jda.getGuildById(Constants.XIGAM_SERVER_ID))
+                        .getMember(User.fromId(Constants.BLUEJAY_USER_ID))).getOnlineStatus();
                 if (status != OnlineStatus.OFFLINE) {
                     interaction.reply(MessageUtil.genericEmbed("Bluejay is currently online."));
                 } else {
@@ -66,13 +69,18 @@ public final class HowLongCommand extends Command implements Arguments {
                 var diff = ChronoUnit.SECONDS.between(Constants.LEQEND_MET_SIMP, OffsetDateTime.now());
                 interaction.reply(MessageUtil.genericEmbed("レケンド met his simp:\n **" + EncodingUtil.formatPeriod(diff) + "** ago."));
             }
+            case START_GENSHIN -> {
+                var diff = ChronoUnit.SECONDS.between(Constants.GENSHIN_STARTED, OffsetDateTime.now());
+                interaction.reply(MessageUtil.genericEmbed("Magix started playing Genshin Impact:\n **" + EncodingUtil.formatPeriod(diff) + "** ago."));
+            }
         }
     }
 
     @Override
     public Collection<Argument> getArguments() {
-        return List.of(
-                Argument.createWithChoices("since", "How long has it been since...", "since", OptionType.STRING, true, 0, options)
-        );
+        var argument = Argument.createWithChoices("since", "How long has it been since...", "since", OptionType.STRING, true, 0, options);
+        argument.trailing = true; // This manually enables trailing arguments with choices.
+        
+        return List.of(argument);
     }
 }

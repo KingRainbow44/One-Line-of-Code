@@ -14,6 +14,7 @@ public final class Constants {
     public static final String XIGAM_SERVER_ID = "884951643395862548";
 
     public static final String SPOTIFY_CLIENT_ID = Config.get("SPOTIFY-CLIENT-ID");
+    public static final String PRESENCE_CLIENT_ID = Config.get("PRESENCE-CLIENT-ID");
 
     public static final String BOT_AUTHORIZATION = Config.get("TOKEN");
     public static final String PONJO_API_KEY = Config.get("PONJO-API-KEY");
@@ -25,6 +26,7 @@ public final class Constants {
     public static final Color EMBED_COLOR = new Color(3, 252, 236);
     public static final OffsetDateTime MAGIX_BIRTHDAY = OffsetDateTime.of(2008, 9, 29, 4, 0, 0, 0, ZoneOffset.UTC);
     public static final OffsetDateTime LEQEND_MET_SIMP = OffsetDateTime.of(2020, 7, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+    public static final OffsetDateTime GENSHIN_STARTED = OffsetDateTime.of(2021, 8, 24, 21, 6, 0, 0, ZoneOffset.UTC);
     
     public static boolean check() {
         var logger = OneLineOfCode.logger;

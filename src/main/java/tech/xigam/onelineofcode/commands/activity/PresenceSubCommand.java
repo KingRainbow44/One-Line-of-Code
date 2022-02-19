@@ -50,7 +50,7 @@ public final class PresenceSubCommand extends SubCommand implements Arguments {
     public Collection<Argument> getArguments() {
         return List.of(
                 Argument.createWithChoices("activity", "The activity type of the bot.", "activity", OptionType.STRING, true, 0, "competing", "playing", "streaming", "listening", "watching"),
-                Argument.create("message", "The message of the activity.", "message", OptionType.STRING, true, 1)
+                Argument.createTrailingArgument("message", "The message of the activity.", "message", OptionType.STRING, true, 1)
         );
     }
 }
