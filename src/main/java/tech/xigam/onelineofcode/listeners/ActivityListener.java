@@ -30,14 +30,16 @@ public final class ActivityListener extends ListenerAdapter {
             default -> MessageUtil.genericEmbed("Bluejay is now " + event.getNewOnlineStatus().name().toLowerCase() + ".");
         });
 
-        switch (newStatus) {
-            case ONLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("yay! bluejay's here!", "Childelol_Soreko", "755380388934975488"));
-            case OFFLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("cri, bluejay isn't here T-T", "ChildeCri_wroughten", "896479017312616519"));
-            case IDLE, DO_NOT_DISTURB -> RemoteUtil.updateClient(RemoteAction.customStatus("hmm, bluejay's here?", "ChildeThinking", "897807626295988294"));
-            default -> RemoteUtil.updateClient(RemoteAction.blankStatus());
-        }
-
         if (newStatus == OnlineStatus.OFFLINE)
             Storage.store("bluejayOfflineAt", System.currentTimeMillis());
+        
+        OneLineOfCode.bluejayQueue.queueAction(time -> {
+            switch (newStatus) {
+                case ONLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("yay! bluejay's here!", "Childelol_Soreko", "755380388934975488"));
+                case OFFLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("cri, bluejay isn't here T-T", "ChildeCri_wroughten", "896479017312616519"));
+                case IDLE, DO_NOT_DISTURB -> RemoteUtil.updateClient(RemoteAction.customStatus("hmm, bluejay's here?", "ChildeThinking", "897807626295988294"));
+                default -> RemoteUtil.updateClient(RemoteAction.blankStatus());
+            }
+        });
     }
 }

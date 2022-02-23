@@ -103,6 +103,19 @@
             <artifactId>DiscordIPC</artifactId>
             <version>LATEST</version>
         </dependency>
+        
+        <!-- Queue System -->
+        <dependency>
+            <groupId>tech.xigam</groupId>
+            <artifactId>BasicQueuer</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <!-- JavaMail API -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
-
 </project>

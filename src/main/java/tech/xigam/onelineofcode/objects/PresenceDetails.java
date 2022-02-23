@@ -2,6 +2,7 @@ package tech.xigam.onelineofcode.objects;
 
 import com.jagrosh.discordipc.entities.RichPresence;
 import lombok.AllArgsConstructor;
+import tech.xigam.onelineofcode.utils.JsonUtil;
 
 import java.time.OffsetDateTime;
 

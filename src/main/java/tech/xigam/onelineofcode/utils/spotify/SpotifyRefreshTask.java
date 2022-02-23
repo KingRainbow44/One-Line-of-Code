@@ -26,6 +26,6 @@ public final class SpotifyRefreshTask extends Thread {
                     OneLineOfCode.logger.error("Error refreshing Spotify access token", exception);
                 }
             }
-        }, 0L, TimeUnit.MINUTES.toMillis(30));
+        }, 0L, TimeUnit.MINUTES.toMillis(50));
     }
 }

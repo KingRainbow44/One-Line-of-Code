@@ -2,6 +2,7 @@ package tech.xigam.onelineofcode;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -11,25 +12,31 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.xigam.basicqueuer.BasicQueue;
 import tech.xigam.cch.ComplexCommandHandler;
 import tech.xigam.express.Express;
 import tech.xigam.express.Router;
 import tech.xigam.onelineofcode.commands.*;
 import tech.xigam.onelineofcode.listeners.ActivityListener;
 import tech.xigam.onelineofcode.routes.GenericEndpoints;
+import tech.xigam.onelineofcode.routes.MagixEndpoints;
 import tech.xigam.onelineofcode.routes.SpotifyEndpoints;
+import tech.xigam.onelineofcode.utils.FileUtil;
+import tech.xigam.onelineofcode.utils.JsonUtil;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 import tech.xigam.onelineofcode.utils.absolute.RPCClient;
 import tech.xigam.onelineofcode.utils.spotify.SpotifyInstance;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.OffsetDateTime;
 import java.util.EnumSet;
+import java.util.concurrent.TimeUnit;
 
 public final class OneLineOfCode extends WebSocketServer {
     public static final ComplexCommandHandler commandHandler = new ComplexCommandHandler(true);
-    public static final OffsetDateTime start = OffsetDateTime.now();
+    public static final BasicQueue bluejayQueue = new BasicQueue(TimeUnit.MINUTES.toMillis(1));
+    public static final tech.xigam.onelineofcode.objects.Activity activities;
     public static JDA jda;
     public static User magix;
     public static WebSocket client;
@@ -41,6 +48,17 @@ public final class OneLineOfCode extends WebSocketServer {
             logger.error("One or more critical constants are missing.");
             System.exit(0);
         }
+        
+        if(!FileUtil.checkFiles()) {
+            logger.error("One or more critical files are missing.");
+            System.exit(0);
+        }
+        
+        // Set variables.
+        activities = JsonUtil.jsonFileDeserialize(
+                new File(System.getProperty("user.dir"), "activity.json"),
+                tech.xigam.onelineofcode.objects.Activity.class
+        );
     }
 
     public OneLineOfCode(int port) {
@@ -50,7 +68,7 @@ public final class OneLineOfCode extends WebSocketServer {
     public static void main(String[] args) {
         try {
             var jda = JDABuilder.create(Constants.BOT_AUTHORIZATION, EnumSet.allOf(GatewayIntent.class))
-                    .setActivity(Activity.competing("a tennis match"))
+                    .setActivity(parseBotActivity()).setStatus(parseBotStatus())
                     .addEventListeners(commandHandler, new ActivityListener())
                     .enableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS);
 
@@ -61,6 +79,26 @@ public final class OneLineOfCode extends WebSocketServer {
             System.exit(0);
         }
     }
+    
+    private static Activity parseBotActivity() {
+        var text = activities.bot.status.text;
+        return switch(activities.bot.status.action) {
+            default -> Activity.playing(text);
+            case "listening" -> Activity.listening(text);
+            case "watching" -> Activity.watching(text);
+            case "streaming" -> Activity.streaming(text, "https://twitch.tv/lolMagixD");
+            case "competing" -> Activity.competing(text);
+        };
+    }
+    
+    private static OnlineStatus parseBotStatus() {
+        return switch(activities.bot.presence) {
+            default -> OnlineStatus.ONLINE;
+            case "dnd" -> OnlineStatus.DO_NOT_DISTURB;
+            case "idle" -> OnlineStatus.IDLE;
+            case "invisible" -> OnlineStatus.INVISIBLE;
+        };
+    }
 
     /*
      * WebSocket Code
@@ -69,12 +107,12 @@ public final class OneLineOfCode extends WebSocketServer {
     private static void continueSetup() {
         // Cache the Magix user.
         jda.retrieveUserById(Constants.MAGIX_USER_ID).queue(user -> magix = user);
-
         // Create the web socket server.
         new OneLineOfCode(8080).start();
-        
         // Start the Discord Rich Presence.
         RPCClient.initialize();
+        // Start the queue.
+        bluejayQueue.start();
 
         // Setup command handler.
         commandHandler.setJda(OneLineOfCode.jda);
@@ -87,7 +125,9 @@ public final class OneLineOfCode extends WebSocketServer {
         
         try { // Setup Express.
             var router = new Router()
-                    .get("/", GenericEndpoints::indexEndpoint);
+                    .get("/", GenericEndpoints::indexEndpoint)
+                    .get("/magix", MagixEndpoints::indexEndpoint)
+                    .get("/magix/message", MagixEndpoints::messageEndpoint);
 
             if (Constants.SPOTIFY_AUTH_CODE.isEmpty())
                 router.get("/spotify/callback", SpotifyEndpoints::callbackEndpoint);

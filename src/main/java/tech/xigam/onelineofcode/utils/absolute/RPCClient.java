@@ -20,13 +20,25 @@ public final class RPCClient {
         }
     }
     
+    public static void updateConfig() {
+        var config = OneLineOfCode.activities;
+        config.richPresence.details = presence.details;
+        config.richPresence.state = presence.state;
+        config.richPresence.smallImage = presence.smallImageKey;
+        config.richPresence.largeImage = presence.largeImageKey;
+    }
+    
     static class Listener implements IPCListener {
         @Override public void onReady(IPCClient client) {
             OneLineOfCode.logger.info("RPC Client logged into Discord.");
 
+            var presenceConfig = OneLineOfCode.activities.richPresence;
             presence = new PresenceDetails().setStartTimestamp(OffsetDateTime.now())
-                    .setDetails("Competing in a tennis match.")
-                    .setState("It's not going well right now...");
+                            .setDetails(presenceConfig.details).setState(presenceConfig.state);
+            if(!presenceConfig.largeImage.isEmpty())
+                presence.setLargeImage(presenceConfig.largeImage);
+            if(!presenceConfig.smallImage.isEmpty())
+                presence.setSmallImage(presenceConfig.smallImage);
             client.sendRichPresence(presence.build());
         }
     }
