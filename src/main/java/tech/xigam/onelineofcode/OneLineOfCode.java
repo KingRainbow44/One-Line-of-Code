@@ -48,12 +48,12 @@ public final class OneLineOfCode extends WebSocketServer {
             logger.error("One or more critical constants are missing.");
             System.exit(0);
         }
-        
-        if(!FileUtil.checkFiles()) {
+
+        if (!FileUtil.checkFiles()) {
             logger.error("One or more critical files are missing.");
             System.exit(0);
         }
-        
+
         // Set variables.
         activities = JsonUtil.jsonFileDeserialize(
                 new File(System.getProperty("user.dir"), "activity.json"),
@@ -79,10 +79,10 @@ public final class OneLineOfCode extends WebSocketServer {
             System.exit(0);
         }
     }
-    
+
     private static Activity parseBotActivity() {
         var text = activities.bot.status.text;
-        return switch(activities.bot.status.action) {
+        return switch (activities.bot.status.action) {
             default -> Activity.playing(text);
             case "listening" -> Activity.listening(text);
             case "watching" -> Activity.watching(text);
@@ -90,9 +90,9 @@ public final class OneLineOfCode extends WebSocketServer {
             case "competing" -> Activity.competing(text);
         };
     }
-    
+
     private static OnlineStatus parseBotStatus() {
-        return switch(activities.bot.presence) {
+        return switch (activities.bot.presence) {
             default -> OnlineStatus.ONLINE;
             case "dnd" -> OnlineStatus.DO_NOT_DISTURB;
             case "idle" -> OnlineStatus.IDLE;
@@ -122,7 +122,7 @@ public final class OneLineOfCode extends WebSocketServer {
         commandHandler.registerCommand(new ActivityCommand());
         commandHandler.registerCommand(new SpotifyCommand());
         commandHandler.registerCommand(new HowLongCommand());
-        
+
         try { // Setup Express.
             var router = new Router()
                     .get("/", GenericEndpoints::indexEndpoint)
@@ -135,7 +135,8 @@ public final class OneLineOfCode extends WebSocketServer {
             Express.create(42069)
                     .notFound(GenericEndpoints::notFoundEndpoint)
                     .router(router).listen();
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
     }
 
     @Override

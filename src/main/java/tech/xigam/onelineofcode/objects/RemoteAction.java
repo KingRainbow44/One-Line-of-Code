@@ -4,6 +4,7 @@ public final class RemoteAction {
     public final String action;
     public boolean blankStatus;
     public String statusMessage, statusEmoji, statusEmojiId;
+
     public RemoteAction(String action) {
         this.action = action;
     }

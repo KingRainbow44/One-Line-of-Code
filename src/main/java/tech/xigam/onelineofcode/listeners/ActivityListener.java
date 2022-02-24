@@ -32,7 +32,7 @@ public final class ActivityListener extends ListenerAdapter {
 
         if (newStatus == OnlineStatus.OFFLINE)
             Storage.store("bluejayOfflineAt", System.currentTimeMillis());
-        
+
         OneLineOfCode.bluejayQueue.queueAction(time -> {
             switch (newStatus) {
                 case ONLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("yay! bluejay's here!", "Childelol_Soreko", "755380388934975488"));

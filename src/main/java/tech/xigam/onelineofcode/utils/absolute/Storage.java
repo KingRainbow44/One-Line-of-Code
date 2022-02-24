@@ -13,7 +13,7 @@ public final class Storage {
     public static <T> T fetch(String key, Class<T> type) {
         return type.cast(storage.get(key));
     }
-    
+
     public static void clear(String key) {
         storage.remove(key);
     }

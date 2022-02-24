@@ -4,6 +4,7 @@ import tech.xigam.onelineofcode.Config;
 import tech.xigam.onelineofcode.OneLineOfCode;
 
 import java.awt.*;
+import java.io.File;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -20,10 +21,10 @@ public final class Constants {
     public static final String PONJO_API_KEY = Config.get("PONJO-API-KEY");
     public static final String SPOTIFY_AUTH_CODE = Config.get("SPOTIFY-AUTH-CODE");
     public static final String SPOTIFY_SECRET = Config.get("SPOTIFY-CLIENT-SECRET");
-    
+
     public static final String GMAIL_USERNAME = Config.get("GMAIL-USERNAME");
     public static final String GMAIL_PASSWORD = Config.get("GMAIL-PASSWORD");
-    
+
     public static final String ATT_PHONE_NUMBER = Config.get("ATT-PHONE-NUMBER");
 
     public static final String SPOTIFY_CALLBACK_URI = Config.get("SPOTIFY-CALLBACK-URI");
@@ -32,7 +33,9 @@ public final class Constants {
     public static final OffsetDateTime MAGIX_BIRTHDAY = OffsetDateTime.of(2008, 9, 29, 4, 0, 0, 0, ZoneOffset.UTC);
     public static final OffsetDateTime LEQEND_MET_SIMP = OffsetDateTime.of(2020, 7, 1, 0, 0, 0, 0, ZoneOffset.UTC);
     public static final OffsetDateTime GENSHIN_STARTED = OffsetDateTime.of(2021, 8, 24, 21, 6, 0, 0, ZoneOffset.UTC);
-    
+    public static final OffsetDateTime MAGIX_MSGED_BLUEJAY = OffsetDateTime.of(2021, 8, 20, 15, 15, 0, 0, ZoneOffset.UTC);
+    public static final File ACTIVITY_FILE = new File(System.getProperty("user.dir"), "activity.json");
+
     public static boolean check() {
         var logger = OneLineOfCode.logger;
         if (BOT_AUTHORIZATION == null) {

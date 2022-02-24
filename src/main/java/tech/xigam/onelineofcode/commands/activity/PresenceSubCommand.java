@@ -7,6 +7,8 @@ import tech.xigam.cch.command.SubCommand;
 import tech.xigam.cch.utils.Argument;
 import tech.xigam.cch.utils.Interaction;
 import tech.xigam.onelineofcode.OneLineOfCode;
+import tech.xigam.onelineofcode.utils.FileUtil;
+import tech.xigam.onelineofcode.utils.JsonUtil;
 import tech.xigam.onelineofcode.utils.MessageUtil;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 
@@ -44,6 +46,14 @@ public final class PresenceSubCommand extends SubCommand implements Arguments {
 
         jda.getPresence().setPresence(activity, true);
         interaction.reply(MessageUtil.genericEmbed("Presence has been set to `" + activityType + "` with the message: `" + message + "`."));
+
+        // Save the file after replying.
+        OneLineOfCode.activities.bot.status.action = activityType;
+        OneLineOfCode.activities.bot.status.text = message;
+        FileUtil.writeToFile(
+                Constants.ACTIVITY_FILE,
+                JsonUtil.jsonFileSerialize(OneLineOfCode.activities)
+        );
     }
 
     @Override

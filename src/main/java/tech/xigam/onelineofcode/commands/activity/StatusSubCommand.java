@@ -7,6 +7,8 @@ import tech.xigam.cch.command.SubCommand;
 import tech.xigam.cch.utils.Argument;
 import tech.xigam.cch.utils.Interaction;
 import tech.xigam.onelineofcode.OneLineOfCode;
+import tech.xigam.onelineofcode.utils.FileUtil;
+import tech.xigam.onelineofcode.utils.JsonUtil;
 import tech.xigam.onelineofcode.utils.MessageUtil;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 
@@ -42,6 +44,13 @@ public final class StatusSubCommand extends SubCommand implements Arguments {
 
         jda.getPresence().setPresence(onlineStatus, true);
         interaction.reply(MessageUtil.genericEmbed("Status changed to `" + status + "`."));
+
+        // Save the file after replying.
+        OneLineOfCode.activities.bot.presence = status;
+        FileUtil.writeToFile(
+                Constants.ACTIVITY_FILE,
+                JsonUtil.jsonFileSerialize(OneLineOfCode.activities)
+        );
     }
 
     @Override

@@ -9,7 +9,7 @@ public final class SpotifyEndpoints {
      * /spotify/callback/
      */
     public static void callbackEndpoint(Request request) {
-        if(OneLineOfCode.spotifyInstance != null) {
+        if (OneLineOfCode.spotifyInstance != null) {
             request.code(302).respond("Authorization has already been completed.");
             return;
         }

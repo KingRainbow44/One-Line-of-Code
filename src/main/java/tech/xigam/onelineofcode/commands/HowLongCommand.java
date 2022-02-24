@@ -24,11 +24,13 @@ public final class HowLongCommand extends Command implements Arguments {
     private static final String MAGIX_BORN = "Magix was born";
     private static final String LEQEND_SIMP = "the day レケンド met his simp";
     private static final String START_GENSHIN = "Magix started playing Genshin Impact";
+    private static final String MAGIX_MSGED_BLUEJAY = "Magix started talking to Bluejay";
     private final String[] options = new String[]{
             "Bluejay was last online",
             "Magix was born",
             "the day レケンド met his simp",
-            "Magix started playing Genshin Impact"
+            "Magix started playing Genshin Impact",
+            "Magix started talking to Bluejay"
     };
 
     public HowLongCommand() {
@@ -73,6 +75,10 @@ public final class HowLongCommand extends Command implements Arguments {
                 var diff = ChronoUnit.SECONDS.between(Constants.GENSHIN_STARTED, OffsetDateTime.now());
                 interaction.reply(MessageUtil.genericEmbed("Magix started playing Genshin Impact:\n **" + EncodingUtil.formatPeriod(diff) + "** ago."));
             }
+            case MAGIX_MSGED_BLUEJAY -> {
+                var diff = ChronoUnit.SECONDS.between(Constants.MAGIX_MSGED_BLUEJAY, OffsetDateTime.now());
+                interaction.reply(MessageUtil.genericEmbed("Magix started talking to Bluejay:\n **" + EncodingUtil.formatPeriod(diff) + "** ago."));
+            }
         }
     }
 
@@ -80,7 +86,7 @@ public final class HowLongCommand extends Command implements Arguments {
     public Collection<Argument> getArguments() {
         var argument = Argument.createWithChoices("since", "How long has it been since...", "since", OptionType.STRING, true, 0, options);
         argument.trailing = true; // This manually enables trailing arguments with choices.
-        
+
         return List.of(argument);
     }
 }

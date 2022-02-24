@@ -2,7 +2,6 @@ package tech.xigam.onelineofcode.objects;
 
 import com.jagrosh.discordipc.entities.RichPresence;
 import lombok.AllArgsConstructor;
-import tech.xigam.onelineofcode.utils.JsonUtil;
 
 import java.time.OffsetDateTime;
 
@@ -24,26 +23,31 @@ public final class PresenceDetails {
     public String spectateSecret;
     public boolean instance;
 
-    public PresenceDetails() { }
-    
+    public PresenceDetails() {
+    }
+
     public RichPresence build() {
         return new RichPresence(this.state, this.details, this.startTimestamp, this.endTimestamp, this.largeImageKey, this.largeImageText, this.smallImageKey, this.smallImageText, this.partyId, this.partySize, this.partyMax, this.matchSecret, this.joinSecret, this.spectateSecret, this.instance);
     }
 
     public PresenceDetails setState(String state) {
-        this.state = state; return this;
+        this.state = state;
+        return this;
     }
 
     public PresenceDetails setDetails(String details) {
-        this.details = details; return this;
+        this.details = details;
+        return this;
     }
 
     public PresenceDetails setStartTimestamp(OffsetDateTime startTimestamp) {
-        this.startTimestamp = startTimestamp; return this;
+        this.startTimestamp = startTimestamp;
+        return this;
     }
 
     public PresenceDetails setEndTimestamp(OffsetDateTime endTimestamp) {
-        this.endTimestamp = endTimestamp; return this;
+        this.endTimestamp = endTimestamp;
+        return this;
     }
 
     public PresenceDetails setLargeImage(String largeImageKey, String largeImageText) {
@@ -57,7 +61,8 @@ public final class PresenceDetails {
     }
 
     public PresenceDetails setSmallImage(String smallImageKey, String smallImageText) {
-        this.smallImageKey = smallImageKey; this.smallImageText = smallImageText;
+        this.smallImageKey = smallImageKey;
+        this.smallImageText = smallImageText;
         return this;
     }
 
@@ -66,23 +71,29 @@ public final class PresenceDetails {
     }
 
     public PresenceDetails setParty(String partyId, int partySize, int partyMax) {
-        this.partyId = partyId; this.partySize = partySize; 
-        this.partyMax = partyMax; return this;
+        this.partyId = partyId;
+        this.partySize = partySize;
+        this.partyMax = partyMax;
+        return this;
     }
 
     public PresenceDetails setMatchSecret(String matchSecret) {
-        this.matchSecret = matchSecret; return this;
+        this.matchSecret = matchSecret;
+        return this;
     }
 
     public PresenceDetails setJoinSecret(String joinSecret) {
-        this.joinSecret = joinSecret; return this;
+        this.joinSecret = joinSecret;
+        return this;
     }
 
     public PresenceDetails setSpectateSecret(String spectateSecret) {
-        this.spectateSecret = spectateSecret; return this;
+        this.spectateSecret = spectateSecret;
+        return this;
     }
 
     public PresenceDetails setInstance(boolean instance) {
-        this.instance = instance; return this;
+        this.instance = instance;
+        return this;
     }
 }
