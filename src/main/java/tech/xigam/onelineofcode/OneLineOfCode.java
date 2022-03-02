@@ -18,11 +18,14 @@ import tech.xigam.express.Express;
 import tech.xigam.express.Router;
 import tech.xigam.onelineofcode.commands.*;
 import tech.xigam.onelineofcode.listeners.ActivityListener;
+import tech.xigam.onelineofcode.listeners.MessageListener;
+import tech.xigam.onelineofcode.objects.RemoteAction;
 import tech.xigam.onelineofcode.routes.GenericEndpoints;
 import tech.xigam.onelineofcode.routes.MagixEndpoints;
 import tech.xigam.onelineofcode.routes.SpotifyEndpoints;
 import tech.xigam.onelineofcode.utils.FileUtil;
 import tech.xigam.onelineofcode.utils.JsonUtil;
+import tech.xigam.onelineofcode.utils.RemoteUtil;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 import tech.xigam.onelineofcode.utils.absolute.RPCClient;
 import tech.xigam.onelineofcode.utils.spotify.SpotifyInstance;
@@ -31,6 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class OneLineOfCode extends WebSocketServer {
@@ -42,6 +48,8 @@ public final class OneLineOfCode extends WebSocketServer {
     public static WebSocket client;
     public static SpotifyInstance spotifyInstance;
     public static Logger logger = LoggerFactory.getLogger(OneLineOfCode.class);
+    
+    public static final Map<String, List<String>> deletedMessages = new HashMap<>();
 
     static {
         if (!Constants.check()) {
@@ -69,7 +77,7 @@ public final class OneLineOfCode extends WebSocketServer {
         try {
             var jda = JDABuilder.create(Constants.BOT_AUTHORIZATION, EnumSet.allOf(GatewayIntent.class))
                     .setActivity(parseBotActivity()).setStatus(parseBotStatus())
-                    .addEventListeners(commandHandler, new ActivityListener())
+                    .addEventListeners(commandHandler, new ActivityListener(), new MessageListener())
                     .enableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS);
 
             OneLineOfCode.jda = jda.build();
@@ -122,6 +130,7 @@ public final class OneLineOfCode extends WebSocketServer {
         commandHandler.registerCommand(new ActivityCommand());
         commandHandler.registerCommand(new SpotifyCommand());
         commandHandler.registerCommand(new HowLongCommand());
+        commandHandler.registerCommand(new SnipeCommand());
 
         try { // Setup Express.
             var router = new Router()
@@ -149,6 +158,18 @@ public final class OneLineOfCode extends WebSocketServer {
         if (client == null) {
             client = webSocket;
             logger.info("WebSocket client connected.");
+            
+            // Update client.
+            @SuppressWarnings("ConstantConditions") 
+            var status = jda.getGuildById(Constants.XIGAM_SERVER_ID)
+                    .getMemberById(Constants.BLUEJAY_USER_ID)
+                    .getOnlineStatus();
+            switch (status) {
+                case ONLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("yay! bluejay's here!", "Childelol_Soreko", "755380388934975488"));
+                case OFFLINE -> RemoteUtil.updateClient(RemoteAction.customStatus("cri, bluejay isn't here T-T", "ChildeCri_wroughten", "896479017312616519"));
+                case IDLE, DO_NOT_DISTURB -> RemoteUtil.updateClient(RemoteAction.customStatus("hmm, bluejay's here?", "ChildeThinking", "897807626295988294"));
+                default -> RemoteUtil.updateClient(RemoteAction.blankStatus());
+            }
         }
     }
 

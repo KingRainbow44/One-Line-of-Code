@@ -15,8 +15,8 @@ public final class RPCClient {
         client.setListener(new Listener());
         try {
             client.connect();
-        } catch (Exception ignored) {
-            OneLineOfCode.logger.info("Unable to detect a Discord client.");
+        } catch (Exception exception) {
+            OneLineOfCode.logger.info("Unable to detect a Discord client.", exception);
         }
     }
 
@@ -36,9 +36,9 @@ public final class RPCClient {
             var presenceConfig = OneLineOfCode.activities.richPresence;
             presence = new PresenceDetails().setStartTimestamp(OffsetDateTime.now())
                     .setDetails(presenceConfig.details).setState(presenceConfig.state);
-            if (!presenceConfig.largeImage.isEmpty())
+            if (presenceConfig.largeImage != null)
                 presence.setLargeImage(presenceConfig.largeImage);
-            if (!presenceConfig.smallImage.isEmpty())
+            if (presenceConfig.smallImage != null)
                 presence.setSmallImage(presenceConfig.smallImage);
             client.sendRichPresence(presence.build());
         }
