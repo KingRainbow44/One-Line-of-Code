@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.xigam.basicqueuer.BasicQueue;
 import tech.xigam.cch.ComplexCommandHandler;
+import tech.xigam.elixirapi.ElixirAPI;
 import tech.xigam.express.Express;
 import tech.xigam.express.Router;
 import tech.xigam.onelineofcode.commands.*;
@@ -46,6 +47,7 @@ public final class OneLineOfCode extends WebSocketServer {
     public static JDA jda;
     public static User magix;
     public static WebSocket client;
+    public static ElixirAPI elixirApi;
     public static SpotifyInstance spotifyInstance;
     public static Logger logger = LoggerFactory.getLogger(OneLineOfCode.class);
     
@@ -121,6 +123,8 @@ public final class OneLineOfCode extends WebSocketServer {
         RPCClient.initialize();
         // Start the queue.
         bluejayQueue.start();
+        // Setup the Elixir API.
+        elixirApi = ElixirAPI.create(Constants.PONJO_API_KEY);
 
         // Setup command handler.
         commandHandler.setJda(OneLineOfCode.jda);
@@ -128,7 +132,7 @@ public final class OneLineOfCode extends WebSocketServer {
         commandHandler.registerCommand(new DeployCommand());
         commandHandler.registerCommand(new ShutdownCommand());
         commandHandler.registerCommand(new ActivityCommand());
-        commandHandler.registerCommand(new SpotifyCommand());
+        commandHandler.registerCommand(new MusicCommand());
         commandHandler.registerCommand(new HowLongCommand());
         commandHandler.registerCommand(new SnipeCommand());
 

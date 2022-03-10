@@ -5,8 +5,6 @@ import com.jagrosh.discordipc.IPCListener;
 import tech.xigam.onelineofcode.OneLineOfCode;
 import tech.xigam.onelineofcode.objects.PresenceDetails;
 
-import java.time.OffsetDateTime;
-
 public final class RPCClient {
     public static final IPCClient client = new IPCClient(Long.parseLong(Constants.PRESENCE_CLIENT_ID));
     public static PresenceDetails presence;
@@ -34,7 +32,7 @@ public final class RPCClient {
             OneLineOfCode.logger.info("RPC Client logged into Discord.");
 
             var presenceConfig = OneLineOfCode.activities.richPresence;
-            presence = new PresenceDetails().setStartTimestamp(OffsetDateTime.now())
+            presence = new PresenceDetails()
                     .setDetails(presenceConfig.details).setState(presenceConfig.state);
             if (presenceConfig.largeImage != null)
                 presence.setLargeImage(presenceConfig.largeImage);
