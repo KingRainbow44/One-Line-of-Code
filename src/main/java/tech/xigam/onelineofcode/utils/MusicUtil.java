@@ -102,6 +102,19 @@ public final class MusicUtil {
         } catch (RequestBuildException ignored) { }
     }
     
+    public static void getPlayingFromBot(Consumer<TrackObject> callback, Guild guild, Bot bot) {
+        try {
+            var request = new GetPlayingTrackRequest.Builder(OneLineOfCode.elixirApi)
+                    .guild(guild.getId()).bot(bot).build();
+            request.execute(response -> {
+                var rsp = (GetPlayingTrackRequest.Response) response;
+                callback.accept(rsp.getAsTrack());
+            });
+        } catch (RequestBuildException ignored) {
+            callback.accept(null);
+        }
+    }
+    
     public static void getQueueFromBot(Consumer<TrackCollection> callback, Guild guild, Bot bot) {
         try {
             var request = new GetQueueRequest.Builder(OneLineOfCode.elixirApi)
