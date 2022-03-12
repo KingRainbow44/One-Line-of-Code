@@ -15,9 +15,9 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-public final class PlaySubCommand extends SubCommand implements Arguments {
-    public PlaySubCommand() {
-        super("play", "Play four different songs all at once.");
+public final class PlaylistSubCommand extends SubCommand implements Arguments {
+    public PlaylistSubCommand() {
+        super("playlist", "Queue four different playlists all at once.");
     }
 
     @Override
@@ -31,19 +31,19 @@ public final class PlaySubCommand extends SubCommand implements Arguments {
         }
 
         var guild = interaction.getGuild();
-        var song1 = interaction.getArgument("song1", String.class);
-        var song2 = interaction.getArgument("song2", String.class);
-        var song3 = interaction.getArgument("song3", String.class);
-        var song4 = interaction.getArgument("song4", String.class);
+        var playlist1 = interaction.getArgument("playlist1", String.class);
+        var playlist2 = interaction.getArgument("playlist2", String.class);
+        var playlist3 = interaction.getArgument("playlist3", String.class);
+        var playlist4 = interaction.getArgument("playlist4", String.class);
 
         for(var bot : EnumSet.allOf(Bot.class)) {
             MusicUtil.joinChannelFromBot(guild, (AudioChannel) channel, bot);
         }
 
-        MusicUtil.playTrackOnBot(guild, (AudioChannel) channel, song1, Bot.ELIXIR_MUSIC);
-        MusicUtil.playTrackOnBot(guild, (AudioChannel) channel, song2, Bot.ELIXIR_BLUE);
-        MusicUtil.playTrackOnBot(guild, (AudioChannel) channel, song3, Bot.ELIXIR_PREMIUM);
-        MusicUtil.playTrackOnBot(guild, (AudioChannel) channel, song4, Bot.ELIXIR_TWO);
+        MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist1, Bot.ELIXIR_MUSIC);
+        MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist2, Bot.ELIXIR_BLUE);
+        MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist3, Bot.ELIXIR_PREMIUM);
+        MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist4, Bot.ELIXIR_TWO);
 
         interaction.reply(MessageUtil.genericEmbed("Attempted to **unleash hell** on `" + channel.getName() + "`."));
     }
@@ -52,10 +52,10 @@ public final class PlaySubCommand extends SubCommand implements Arguments {
     public Collection<Argument> getArguments() {
         return List.of(
                 Argument.create("channel", "The voice channel to unleash hell in.", "channel", OptionType.CHANNEL, true, 0),
-                Argument.create("song1", "The song to play on Elixir Music.", "song1", OptionType.STRING, true, 2),
-                Argument.create("song2", "The song to play on Blue Elixir.", "song2", OptionType.STRING, true, 3),
-                Argument.create("song3", "The song to play on Elixir Premium.", "song3", OptionType.STRING, true, 4),
-                Argument.create("song4", "The song to play on Elixir Two.", "song4", OptionType.STRING, true, 5)
+                Argument.create("playlist1", "The playlist to queue on Elixir Music.", "playlist1", OptionType.STRING, true, 2),
+                Argument.create("playlist2", "The playlist to queue on Blue Elixir.", "playlist2", OptionType.STRING, true, 3),
+                Argument.create("playlist3", "The playlist to queue on Elixir Premium.", "playlist3", OptionType.STRING, true, 4),
+                Argument.create("playlist4", "The playlist to queue on Elixir Two.", "playlist4", OptionType.STRING, true, 5)
         );
     }
 }

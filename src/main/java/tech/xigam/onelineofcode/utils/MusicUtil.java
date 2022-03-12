@@ -7,15 +7,22 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import tech.xigam.elixirapi.Bot;
 import tech.xigam.elixirapi.exceptions.RequestBuildException;
+import tech.xigam.elixirapi.objects.TrackCollection;
+import tech.xigam.elixirapi.objects.TrackObject;
+import tech.xigam.elixirapi.requests.player.GetPlayingTrackRequest;
 import tech.xigam.elixirapi.requests.player.PauseRequest;
 import tech.xigam.elixirapi.requests.player.PlayRequest;
 import tech.xigam.elixirapi.requests.player.ResumeRequest;
+import tech.xigam.elixirapi.requests.playlist.PlaylistRequest;
+import tech.xigam.elixirapi.requests.playlist.QueuePlaylistRequest;
+import tech.xigam.elixirapi.requests.queue.GetQueueRequest;
 import tech.xigam.onelineofcode.OneLineOfCode;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 public final class MusicUtil {
     @Deprecated
@@ -84,5 +91,24 @@ public final class MusicUtil {
                     .build();
             request.execute(response -> {});
         } catch (RequestBuildException ignored) { }
+    }
+    
+    public static void queuePlaylistOnBot(Guild guild, AudioChannel channel, String playlist, Bot bot) {
+        try {
+            var request = new QueuePlaylistRequest.Builder(OneLineOfCode.elixirApi)
+                    .channel(channel.getId()).playlist(playlist)
+                    .guild(guild.getId()).bot(bot).build();
+            request.execute(response -> {});
+        } catch (RequestBuildException ignored) { }
+    }
+    
+    public static void getQueueFromBot(Consumer<TrackCollection> callback, Guild guild, Bot bot) {
+        try {
+            var request = new GetQueueRequest.Builder(OneLineOfCode.elixirApi)
+                    .guild(guild.getId()).bot(bot).build();
+            request.execute(response -> callback.accept(response.getAsTrackCollection()));
+        } catch (RequestBuildException ignored) { 
+            callback.accept(null);
+        }
     }
 }

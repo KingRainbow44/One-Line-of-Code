@@ -20,6 +20,7 @@ public final class SpotifyEndpoints {
         }
 
         OneLineOfCode.spotifyInstance = new SpotifyInstance(code);
+        OneLineOfCode.logger.info("Spotify authentication successful!");
         request.respond("Authentication successful!");
     }
 }

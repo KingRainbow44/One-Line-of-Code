@@ -135,6 +135,7 @@ public final class OneLineOfCode extends WebSocketServer {
         commandHandler.registerCommand(new MusicCommand());
         commandHandler.registerCommand(new HowLongCommand());
         commandHandler.registerCommand(new SnipeCommand());
+        commandHandler.registerCommand(new HellCommand());
 
         try { // Setup Express.
             var router = new Router()

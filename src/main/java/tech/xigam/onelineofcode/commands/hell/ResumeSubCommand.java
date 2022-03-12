@@ -15,6 +15,8 @@ public final class ResumeSubCommand extends SubCommand {
 
     @Override
     public void execute(Interaction interaction) {
+        interaction.deferReply();
+        
         var guild = interaction.getGuild();
         for(var bot : EnumSet.allOf(Bot.class)) {
             MusicUtil.resumePlayerOnBot(guild, bot);

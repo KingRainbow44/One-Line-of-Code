@@ -42,4 +42,8 @@ public final class SpotifyInstance {
             return null;
         }
     }
+    
+    public SpotifyApi getHandle() {
+        return this.spotifyApi;
+    }
 }

@@ -22,6 +22,8 @@ public final class JoinSubCommand extends SubCommand implements Arguments {
 
     @Override
     public void execute(Interaction interaction) {
+        interaction.deferReply();
+        
         var channel = interaction.getArgument("channel", GuildChannel.class);
         if(!(channel instanceof AudioChannel)) {
             interaction.reply(MessageUtil.genericEmbed("You need to specify a **voice** channel!"));

@@ -15,6 +15,8 @@ public final class PauseSubCommand extends SubCommand {
 
     @Override
     public void execute(Interaction interaction) {
+        interaction.deferReply();
+        
         var guild = interaction.getGuild();
         for(var bot : EnumSet.allOf(Bot.class)) {
             MusicUtil.pausePlayerOnBot(guild, bot);
