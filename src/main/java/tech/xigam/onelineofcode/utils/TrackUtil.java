@@ -68,7 +68,7 @@ public final class TrackUtil {
             }
         } else if (trackUri.contains("www.youtube.com") || trackUri.contains("youtu.be")) {
             final YTVideoData data = getVideoData(extractVideoId(track.uri));
-            return data != null ? data.items.get(0).snippet.thumbnails.get("default").get("url") : null;
+            return data != null ? data.items.get(0).snippet.thumbnails.get("maxres").get("url") : null;
         }
         return null;
     }
@@ -119,8 +119,9 @@ public final class TrackUtil {
                 .url(url)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            assert response.body() != null; response.close();
-            return new Gson().fromJson(response.body().string(), YTVideoData.class);
+            assert response.body() != null;
+            var data = new Gson().fromJson(response.body().string(), YTVideoData.class);
+            response.close(); return data;
         } catch (IOException ex) {
             ex.printStackTrace(); return null;
         }

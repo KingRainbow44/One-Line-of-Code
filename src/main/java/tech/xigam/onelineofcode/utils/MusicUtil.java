@@ -111,6 +111,7 @@ public final class MusicUtil {
                     if(response.getResponseCode() == 200)
                         callback.accept(rsp.getAsTrack());
                 } catch (Exception ignored) {
+                    OneLineOfCode.logger.warn("Failed to get playing track from Elixir", ignored);
                     callback.accept(null);
                 }
             });
