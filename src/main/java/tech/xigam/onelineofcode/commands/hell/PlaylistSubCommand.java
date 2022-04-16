@@ -12,7 +12,6 @@ import tech.xigam.onelineofcode.utils.MessageUtil;
 import tech.xigam.onelineofcode.utils.MusicUtil;
 
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 
 public final class PlaylistSubCommand extends SubCommand implements Arguments {
@@ -36,10 +35,6 @@ public final class PlaylistSubCommand extends SubCommand implements Arguments {
         var playlist3 = interaction.getArgument("playlist3", String.class);
         var playlist4 = interaction.getArgument("playlist4", String.class);
 
-        for(var bot : EnumSet.allOf(Bot.class)) {
-            MusicUtil.joinChannelFromBot(guild, (AudioChannel) channel, bot);
-        }
-
         MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist1, Bot.ELIXIR_MUSIC);
         MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist2, Bot.ELIXIR_BLUE);
         MusicUtil.queuePlaylistOnBot(guild, (AudioChannel) channel, playlist3, Bot.ELIXIR_PREMIUM);
@@ -52,10 +47,10 @@ public final class PlaylistSubCommand extends SubCommand implements Arguments {
     public Collection<Argument> getArguments() {
         return List.of(
                 Argument.create("channel", "The voice channel to unleash hell in.", "channel", OptionType.CHANNEL, true, 0),
-                Argument.create("playlist1", "The playlist to queue on Elixir Music.", "playlist1", OptionType.STRING, true, 2),
-                Argument.create("playlist2", "The playlist to queue on Blue Elixir.", "playlist2", OptionType.STRING, true, 3),
-                Argument.create("playlist3", "The playlist to queue on Elixir Premium.", "playlist3", OptionType.STRING, true, 4),
-                Argument.create("playlist4", "The playlist to queue on Elixir Two.", "playlist4", OptionType.STRING, true, 5)
+                Argument.create("playlist1", "The playlist to queue on Elixir Music.", "playlist1", OptionType.STRING, true, 1),
+                Argument.create("playlist2", "The playlist to queue on Blue Elixir.", "playlist2", OptionType.STRING, true, 2),
+                Argument.create("playlist3", "The playlist to queue on Elixir Premium.", "playlist3", OptionType.STRING, true, 3),
+                Argument.create("playlist4", "The playlist to queue on Elixir Two.", "playlist4", OptionType.STRING, true, 4)
         );
     }
 }

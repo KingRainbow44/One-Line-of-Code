@@ -21,12 +21,16 @@ public final class ConnectSubCommand extends SubCommand {
         
         var client = RPCClient.client;
         if(client.getStatus() == PipeStatus.CONNECTED) {
-            interaction.reply(MessageUtil.genericEmbed("The Discord client is already connected."));
-            return;
+            try {
+                client.close();
+            } catch (Exception exception) {
+                interaction.reply(MessageUtil.genericEmbed("Failed to disconnect from Discord."));
+                return;
+            }
         }
         
         try {
-            client.connect();
+            client.connect(); client.sendRichPresence(RPCClient.presence.build());
             interaction.reply(MessageUtil.genericEmbed("Successfully connected to the Discord client."));
         } catch (Exception exception) {
             interaction.reply(MessageUtil.generateEmbed("An error occurred while trying to connect to the Discord client.")

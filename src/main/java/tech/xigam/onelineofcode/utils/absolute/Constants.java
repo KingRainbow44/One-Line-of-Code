@@ -18,6 +18,7 @@ public final class Constants {
     public static final String PRESENCE_CLIENT_ID = Config.get("PRESENCE-CLIENT-ID");
 
     public static final String BOT_AUTHORIZATION = Config.get("TOKEN");
+    public static final String USER_AUTHORIZATION = Config.get("AUTHORIZATION");
     public static final String PONJO_API_KEY = Config.get("PONJO-API-KEY");
     public static final String YOUTUBE_API_KEY = Config.get("YOUTUBE-API-KEY");
     public static final String SPOTIFY_AUTH_CODE = Config.get("SPOTIFY-AUTH-CODE");
@@ -36,6 +37,7 @@ public final class Constants {
     public static final OffsetDateTime GENSHIN_STARTED = OffsetDateTime.of(2021, 8, 24, 21, 6, 0, 0, ZoneOffset.UTC);
     public static final OffsetDateTime MAGIX_MSGED_BLUEJAY = OffsetDateTime.of(2021, 8, 20, 15, 15, 0, 0, ZoneOffset.UTC);
     public static final File ACTIVITY_FILE = new File(System.getProperty("user.dir"), "activity.json");
+    public static final File CACHE_FILE = new File(System.getProperty("user.dir"), "cache.json");
 
     public static boolean check() {
         var logger = OneLineOfCode.logger;

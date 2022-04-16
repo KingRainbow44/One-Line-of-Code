@@ -13,7 +13,6 @@ import tech.xigam.elixirapi.requests.player.GetPlayingTrackRequest;
 import tech.xigam.elixirapi.requests.player.PauseRequest;
 import tech.xigam.elixirapi.requests.player.PlayRequest;
 import tech.xigam.elixirapi.requests.player.ResumeRequest;
-import tech.xigam.elixirapi.requests.playlist.PlaylistRequest;
 import tech.xigam.elixirapi.requests.playlist.QueuePlaylistRequest;
 import tech.xigam.elixirapi.requests.queue.GetQueueRequest;
 import tech.xigam.onelineofcode.OneLineOfCode;
@@ -107,8 +106,13 @@ public final class MusicUtil {
             var request = new GetPlayingTrackRequest.Builder(OneLineOfCode.elixirApi)
                     .guild(guild.getId()).bot(bot).build();
             request.execute(response -> {
-                var rsp = (GetPlayingTrackRequest.Response) response;
-                callback.accept(rsp.getAsTrack());
+                try {
+                    var rsp = (GetPlayingTrackRequest.Response) response;
+                    if(response.getResponseCode() == 200)
+                        callback.accept(rsp.getAsTrack());
+                } catch (Exception ignored) {
+                    callback.accept(null);
+                }
             });
         } catch (RequestBuildException ignored) {
             callback.accept(null);

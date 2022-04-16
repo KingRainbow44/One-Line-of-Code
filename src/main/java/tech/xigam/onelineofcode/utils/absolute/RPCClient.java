@@ -7,6 +7,7 @@ import tech.xigam.onelineofcode.objects.PresenceDetails;
 
 public final class RPCClient {
     public static final IPCClient client = new IPCClient(Long.parseLong(Constants.PRESENCE_CLIENT_ID));
+    public static boolean useElixir = false;
     public static PresenceDetails presence;
 
     public static void initialize() {

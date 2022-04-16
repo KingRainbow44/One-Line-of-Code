@@ -44,6 +44,7 @@ public final class OneLineOfCode extends WebSocketServer {
     public static final ComplexCommandHandler commandHandler = new ComplexCommandHandler(true);
     public static final BasicQueue bluejayQueue = new BasicQueue(TimeUnit.MINUTES.toMillis(1));
     public static final tech.xigam.onelineofcode.objects.Activity activities;
+    
     public static JDA jda;
     public static User magix;
     public static WebSocket client;

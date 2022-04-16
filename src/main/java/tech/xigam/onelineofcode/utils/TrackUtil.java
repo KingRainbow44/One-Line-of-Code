@@ -18,11 +18,13 @@
 
 package tech.xigam.onelineofcode.utils;
 
+import com.google.gson.JsonArray;
 import okhttp3.*;
 import com.google.gson.Gson;
 import tech.xigam.onelineofcode.OneLineOfCode;
 import org.apache.hc.core5.http.ParseException;
 import tech.xigam.elixirapi.objects.TrackObject;
+import tech.xigam.onelineofcode.objects.Asset;
 import tech.xigam.onelineofcode.objects.YTVideoData;
 import tech.xigam.onelineofcode.utils.absolute.Constants;
 import se.michaelthelin.spotify.model_objects.specification.*;
@@ -32,9 +34,12 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class TrackUtil {
-
+    private static final List<String> existingCache = new ArrayList<>();
+    
     /**
      * Returns a URL of a track/video's cover art/thumbnail.
      * @param track The AudioTrack to fetch.
@@ -67,6 +72,14 @@ public final class TrackUtil {
         }
         return null;
     }
+    
+    public static String extractTrackId(String url) {
+        return switch(TrackUtil.determineTrackType(url)) {
+            default -> url;
+            case YOUTUBE -> TrackUtil.extractVideoId(url);
+            case SPOTIFY -> TrackUtil.extractSongId(url);
+        };
+    }
 
     public static String formatDuration(long ms) {
         final Duration duration = Duration.ofMillis(ms);
@@ -84,6 +97,17 @@ public final class TrackUtil {
         return url.contains("youtu.be") ? segments[3] : segments[3].split("v=")[1];
     }
 
+    /**
+     * Extracts the song ID from a given URL.
+     * @param url The Spotify URL to extract the song ID from.
+     * @return A song ID.
+     */
+
+    public static String extractSongId(String url) {
+        String[] segments = url.split("/");
+        return segments[4].split("\\?")[0];
+    }
+
     @Nullable
     public static YTVideoData getVideoData(String videoId) {
         OkHttpClient client = new OkHttpClient();
@@ -95,10 +119,72 @@ public final class TrackUtil {
                 .url(url)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            assert response.body() != null;
+            assert response.body() != null; response.close();
             return new Gson().fromJson(response.body().string(), YTVideoData.class);
         } catch (IOException ex) {
             ex.printStackTrace(); return null;
         }
+    }
+    
+    public static boolean isCached(TrackObject track) {
+        if(existingCache.isEmpty()) {
+            var cache = JsonUtil.jsonFileDeserialize(Constants.CACHE_FILE, JsonArray.class);
+            cache.forEach(element -> existingCache.add(element.getAsString()));
+        }
+        
+        return existingCache.contains(TrackUtil.extractTrackId(track.uri));
+    }
+    
+    public static void pushTrackToDiscord(TrackObject track) {
+        var coverArt = TrackUtil.getCoverArt(track);
+        var asset = new Asset(); asset.type = "1";
+        asset.image = EncodingUtil.base64EncodeImage(coverArt);
+        asset.name = TrackUtil.extractTrackId(track.uri);
+        
+        var body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(asset));
+        
+        var httpClient = new OkHttpClient();
+        var url = "https://discord.com/api/v9/oauth2/applications/" +
+                Constants.PRESENCE_CLIENT_ID + "/assets";
+        var request = new Request.Builder()
+                .url(url).method("POST", body)
+                .addHeader("authorization", Constants.USER_AUTHORIZATION)
+                .build();
+        try {
+            var response = httpClient.newCall(request).execute();
+            if(response.code() != 201) {
+                assert response.body() != null;
+                OneLineOfCode.logger.warn("Failed to push track to discord: " + response.code());
+                OneLineOfCode.logger.warn("Response body: " + response.body().string());
+            } else OneLineOfCode.logger.info("Successfully pushed " + track.title + " to Discord.");
+            response.close();
+            
+            // Cache asset in database.
+            var cache = JsonUtil.jsonFileDeserialize(Constants.CACHE_FILE, JsonArray.class);
+            cache.add(asset.name); FileUtil.writeToFile(Constants.CACHE_FILE, JsonUtil.jsonFileSerialize(cache));
+            existingCache.add(asset.name);
+        } catch (Exception exception) {
+            OneLineOfCode.logger.warn("Unable to push asset to Discord's API.", exception);
+        }
+    }
+
+    /**
+     * Determines the source for a given URL.
+     * @param url The URL to find the source of.
+     * @return A {@link TrackType} representing the source of the URL.
+     */
+
+    public static TrackType determineTrackType(String url) {
+        if (url.contains("youtu")) return TrackType.YOUTUBE;
+        if (url.contains("spotify")) return TrackType.SPOTIFY;
+        if (url.contains("file")) return TrackType.CUSTOM;
+        return TrackType.UNKNOWN;
+    }
+
+    public enum TrackType {
+        YOUTUBE,
+        SPOTIFY,
+        CUSTOM,
+        UNKNOWN
     }
 }

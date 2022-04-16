@@ -3,10 +3,7 @@ package tech.xigam.onelineofcode.commands;
 import tech.xigam.cch.command.Baseless;
 import tech.xigam.cch.command.Command;
 import tech.xigam.cch.utils.Interaction;
-import tech.xigam.onelineofcode.commands.activity.ConnectSubCommand;
-import tech.xigam.onelineofcode.commands.activity.PresenceSubCommand;
-import tech.xigam.onelineofcode.commands.activity.RPCSubCommand;
-import tech.xigam.onelineofcode.commands.activity.StatusSubCommand;
+import tech.xigam.onelineofcode.commands.activity.*;
 import tech.xigam.onelineofcode.utils.MessageUtil;
 
 public final class ActivityCommand extends Command implements Baseless {
@@ -17,6 +14,7 @@ public final class ActivityCommand extends Command implements Baseless {
         registerSubCommand(new StatusSubCommand());
         registerSubCommand(new PresenceSubCommand());
         registerSubCommand(new RPCSubCommand());
+        registerSubCommand(new ElixirSubCommand());
     }
 
     @Override

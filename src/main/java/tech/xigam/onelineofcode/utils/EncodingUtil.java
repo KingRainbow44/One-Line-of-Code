@@ -1,5 +1,8 @@
 package tech.xigam.onelineofcode.utils;
 
+import org.apache.commons.io.IOUtils;
+
+import java.net.URL;
 import java.time.Duration;
 import java.util.Base64;
 
@@ -10,6 +13,15 @@ public final class EncodingUtil {
 
     public static String base64Decode(String decode) {
         return new String(Base64.getUrlDecoder().decode(decode));
+    }
+    
+    public static String base64EncodeImage(String imageUrl) {
+        try {
+            byte[] imageBytes = IOUtils.toByteArray(new URL(imageUrl));
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(imageBytes);
+        } catch (Exception ignored) {
+            return EncodingUtil.base64Encode(imageUrl);
+        }
     }
 
     public static String formatDuration(long ms) {
@@ -57,5 +69,15 @@ public final class EncodingUtil {
             return String.format("%d minutes and %d seconds", minutes, seconds);
         }
         return String.format("%d seconds", seconds);
+    }
+    
+    public static String consolidate(String string) {
+        string = string.toLowerCase();
+        
+        var parts = string.split(" ");
+        var builder = new StringBuilder();
+        for (var part : parts)
+            builder.append(part).append("_");
+        return builder.toString();
     }
 }

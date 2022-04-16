@@ -34,7 +34,7 @@ public final class NowPlayingSubCommand extends SubCommand {
                             • Artist: %s
                             • Duration: %s
                             • Bot: %s
-                            """.formatted(fancyBotName(bot), artist, duration);
+                            """.formatted(artist, duration, fancyBotName(bot));
                 MessageEmbed embed = new EmbedBuilder()
                         .setTitle("Currently Playing")
                         .setDescription(String.format("[%s](%s)", title, url))
@@ -43,7 +43,7 @@ public final class NowPlayingSubCommand extends SubCommand {
                         .setTimestamp(new Date().toInstant())
                         .setThumbnail(thumbnail)
                         .build();
-                interaction.reply(embed, false);
+                interaction.sendMessage(embed);
             }, guild, bot);
         }
     }
