@@ -34,13 +34,13 @@ public final class RPCSubCommand extends SubCommand implements Arguments {
                 interaction.reply(MessageUtil.genericEmbed("Invalid field."));
                 return;
             }
-            case "details" -> RPCClient.presence.setDetails(value);
-            case "state" -> RPCClient.presence.setState(value);
-            case "small image" -> RPCClient.presence.setSmallImage(value);
-            case "big image" -> RPCClient.presence.setLargeImage(value);
+            case "details" -> RPCClient.presence.details = value;
+            case "state" -> RPCClient.presence.state = value;
+            case "small image" -> RPCClient.presence.smallImage = value;
+            case "big image" -> RPCClient.presence.largeImage = value;
         }
 
-        RPCClient.client.sendRichPresence(RPCClient.presence.build());
+        RPCClient.client.sendPresence(RPCClient.presence.build());
         interaction.reply(MessageUtil.genericEmbed("Modified the rich presence's " + field + " to `" + value + "`."));
 
         // Save the file after replying.

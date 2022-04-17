@@ -1,6 +1,5 @@
 package tech.xigam.onelineofcode.commands.activity;
 
-import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import tech.xigam.cch.command.SubCommand;
 import tech.xigam.cch.utils.Interaction;
 import tech.xigam.onelineofcode.utils.MessageUtil;
@@ -20,17 +19,17 @@ public final class ConnectSubCommand extends SubCommand {
         }
         
         var client = RPCClient.client;
-        if(client.getStatus() == PipeStatus.CONNECTED) {
+        if(client.isConnected) {
             try {
-                client.close();
-            } catch (Exception exception) {
+                client.disconnect();
+            } catch (Exception ignored) {
                 interaction.reply(MessageUtil.genericEmbed("Failed to disconnect from Discord."));
                 return;
             }
         }
         
         try {
-            client.connect(); client.sendRichPresence(RPCClient.presence.build());
+            client.connect(); client.sendPresence(RPCClient.presence.build());
             interaction.reply(MessageUtil.genericEmbed("Successfully connected to the Discord client."));
         } catch (Exception exception) {
             interaction.reply(MessageUtil.generateEmbed("An error occurred while trying to connect to the Discord client.")

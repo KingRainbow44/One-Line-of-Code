@@ -6,6 +6,11 @@ public final class Activity {
 
     public static class RichPresence {
         public String details, state, largeImage, smallImage;
+        public Button[] buttons;
+        
+        public static class Button {
+            public String label, url;
+        }
     }
 
     public static class Bot {

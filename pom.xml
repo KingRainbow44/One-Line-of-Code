@@ -25,6 +25,17 @@
             <id>central</id>
             <url>https://jcenter.bintray.com</url>
         </repository>
+
+        <!-- Jitpack -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
     
     <dependencies>
@@ -39,14 +50,14 @@
         <dependency>
             <groupId>tech.xigam</groupId>
             <artifactId>CCH</artifactId>
-            <version>1.4.3</version>
+            <version>1.6.1</version>
         </dependency>
         
         <!-- Logger -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.10</version>
+            <version>1.2.11</version>
         </dependency>
         
         <dependency>
@@ -99,9 +110,9 @@
         
         <!-- Discord RPC -->
         <dependency>
-            <groupId>com.jagrosh</groupId>
-            <artifactId>DiscordIPC</artifactId>
-            <version>LATEST</version>
+            <groupId>com.github.NepNep21</groupId>
+            <artifactId>DiscordRPC4j16</artifactId>
+            <version>1.2.0</version>
         </dependency>
         
         <!-- Queue System -->

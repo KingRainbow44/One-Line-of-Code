@@ -29,7 +29,7 @@ public final class ElixirSubCommand extends SubCommand implements Arguments {
             interaction.reply(MessageUtil.genericEmbed("Switched to using custom activity."));
             
             RPCClient.useElixir = false; timer.cancel();
-            RPCClient.client.sendRichPresence(RPCClient.presence.build());
+            RPCClient.client.sendPresence(RPCClient.presence.build());
         } else {
             interaction.deferReply();
             
@@ -44,6 +44,13 @@ public final class ElixirSubCommand extends SubCommand implements Arguments {
             task.guild = OneLineOfCode.jda.getGuildById(guild);
             if(task.guild == null) {
                 interaction.reply(MessageUtil.genericEmbed("The guild you specified does not exist."));
+                return;
+            }
+            
+            assert interaction.getMember().getVoiceState() != null;
+            task.channel = interaction.getMember().getVoiceState().getChannel();
+            if(task.channel == null) {
+                interaction.reply(MessageUtil.genericEmbed("You must be in a voice channel to use Elixir for your activity."));
                 return;
             }
             

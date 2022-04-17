@@ -18,7 +18,6 @@
 
 package tech.xigam.onelineofcode.utils;
 
-import com.google.gson.JsonArray;
 import okhttp3.*;
 import com.google.gson.Gson;
 import tech.xigam.onelineofcode.OneLineOfCode;
@@ -34,11 +33,10 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+
+import static tech.xigam.onelineofcode.OneLineOfCode.cache;
 
 public final class TrackUtil {
-    private static final List<String> existingCache = new ArrayList<>();
     
     /**
      * Returns a URL of a track/video's cover art/thumbnail.
@@ -127,13 +125,8 @@ public final class TrackUtil {
         }
     }
     
-    public static boolean isCached(TrackObject track) {
-        if(existingCache.isEmpty()) {
-            var cache = JsonUtil.jsonFileDeserialize(Constants.CACHE_FILE, JsonArray.class);
-            cache.forEach(element -> existingCache.add(element.getAsString()));
-        }
-        
-        return existingCache.contains(TrackUtil.extractTrackId(track.uri).toLowerCase());
+    public static boolean isCoverArtCached(TrackObject track) {
+        return cache.coverArt.contains(TrackUtil.extractTrackId(track.uri).toLowerCase());
     }
     
     public static void pushTrackToDiscord(TrackObject track) {
@@ -162,9 +155,8 @@ public final class TrackUtil {
             response.close();
             
             // Cache asset in database.
-            var cache = JsonUtil.jsonFileDeserialize(Constants.CACHE_FILE, JsonArray.class);
-            cache.add(asset.name); FileUtil.writeToFile(Constants.CACHE_FILE, JsonUtil.jsonFileSerialize(cache));
-            existingCache.add(asset.name);
+            cache.coverArt.add(asset.name);
+            FileUtil.writeToFile(Constants.CACHE_FILE, JsonUtil.jsonFileSerialize(cache));
         } catch (Exception exception) {
             OneLineOfCode.logger.warn("Unable to push asset to Discord's API.", exception);
         }

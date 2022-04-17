@@ -1,17 +1,21 @@
 package tech.xigam.onelineofcode.utils.absolute;
 
-import com.jagrosh.discordipc.IPCClient;
-import com.jagrosh.discordipc.IPCListener;
+import club.bottomservices.discordrpc.lib.DiscordRPCClient;
+import club.bottomservices.discordrpc.lib.EventListener;
+import club.bottomservices.discordrpc.lib.RichPresence;
+import club.bottomservices.discordrpc.lib.User;
+import org.jetbrains.annotations.NotNull;
 import tech.xigam.onelineofcode.OneLineOfCode;
-import tech.xigam.onelineofcode.objects.PresenceDetails;
+
+import java.util.Arrays;
 
 public final class RPCClient {
-    public static final IPCClient client = new IPCClient(Long.parseLong(Constants.PRESENCE_CLIENT_ID));
+    public static final DiscordRPCClient client = new DiscordRPCClient(Constants.PRESENCE_CLIENT_ID);
     public static boolean useElixir = false;
-    public static PresenceDetails presence;
+    public static RichPresence.Builder presence;
 
     public static void initialize() {
-        client.setListener(new Listener());
+        client.listeners = new Listener();
         try {
             client.connect();
         } catch (Exception exception) {
@@ -23,23 +27,22 @@ public final class RPCClient {
         var config = OneLineOfCode.activities;
         config.richPresence.details = presence.details;
         config.richPresence.state = presence.state;
-        config.richPresence.smallImage = presence.smallImageKey;
-        config.richPresence.largeImage = presence.largeImageKey;
+        config.richPresence.smallImage = presence.smallImage;
+        config.richPresence.largeImage = presence.largeImage;
     }
 
-    static class Listener implements IPCListener {
+    static class Listener implements EventListener {
         @Override
-        public void onReady(IPCClient client) {
+        public void onReady(@NotNull DiscordRPCClient client, @NotNull User user) {
             OneLineOfCode.logger.info("RPC Client logged into Discord.");
 
             var presenceConfig = OneLineOfCode.activities.richPresence;
-            presence = new PresenceDetails()
-                    .setDetails(presenceConfig.details).setState(presenceConfig.state);
-            if (presenceConfig.largeImage != null)
-                presence.setLargeImage(presenceConfig.largeImage);
-            if (presenceConfig.smallImage != null)
-                presence.setSmallImage(presenceConfig.smallImage);
-            client.sendRichPresence(presence.build());
+            presence = new RichPresence.Builder()
+                    .setText(presenceConfig.details, presenceConfig.state)
+                    .setAssets(presenceConfig.largeImage, presenceConfig.smallImage, null, null);
+            if(presenceConfig.buttons.length > 0)
+                Arrays.stream(presenceConfig.buttons).forEach(button -> presence.addButton(button.label, button.url));
+            client.sendPresence(presence.build());
         }
     }
 }

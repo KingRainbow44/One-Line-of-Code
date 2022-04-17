@@ -20,6 +20,7 @@ import tech.xigam.express.Router;
 import tech.xigam.onelineofcode.commands.*;
 import tech.xigam.onelineofcode.listeners.ActivityListener;
 import tech.xigam.onelineofcode.listeners.MessageListener;
+import tech.xigam.onelineofcode.objects.Cache;
 import tech.xigam.onelineofcode.objects.RemoteAction;
 import tech.xigam.onelineofcode.routes.GenericEndpoints;
 import tech.xigam.onelineofcode.routes.MagixEndpoints;
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 public final class OneLineOfCode extends WebSocketServer {
     public static final ComplexCommandHandler commandHandler = new ComplexCommandHandler(true);
     public static final BasicQueue bluejayQueue = new BasicQueue(TimeUnit.MINUTES.toMillis(1));
+    public static final Cache cache = JsonUtil.jsonFileDeserialize(Constants.CACHE_FILE, Cache.class);
     public static final tech.xigam.onelineofcode.objects.Activity activities;
     
     public static JDA jda;
@@ -80,7 +82,7 @@ public final class OneLineOfCode extends WebSocketServer {
         try {
             var jda = JDABuilder.create(Constants.BOT_AUTHORIZATION, EnumSet.allOf(GatewayIntent.class))
                     .setActivity(parseBotActivity()).setStatus(parseBotStatus())
-                    .addEventListeners(commandHandler, new ActivityListener(), new MessageListener())
+                    .addEventListeners(new ActivityListener(), new MessageListener())
                     .enableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS);
 
             OneLineOfCode.jda = jda.build();
