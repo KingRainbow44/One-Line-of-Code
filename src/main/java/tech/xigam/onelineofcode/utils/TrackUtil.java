@@ -133,14 +133,14 @@ public final class TrackUtil {
             cache.forEach(element -> existingCache.add(element.getAsString()));
         }
         
-        return existingCache.contains(TrackUtil.extractTrackId(track.uri));
+        return existingCache.contains(TrackUtil.extractTrackId(track.uri).toLowerCase());
     }
     
     public static void pushTrackToDiscord(TrackObject track) {
         var coverArt = TrackUtil.getCoverArt(track);
         var asset = new Asset(); asset.type = "1";
         asset.image = EncodingUtil.base64EncodeImage(coverArt);
-        asset.name = TrackUtil.extractTrackId(track.uri);
+        asset.name = TrackUtil.extractTrackId(track.uri).toLowerCase();
         
         var body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(asset));
         
@@ -157,6 +157,7 @@ public final class TrackUtil {
                 assert response.body() != null;
                 OneLineOfCode.logger.warn("Failed to push track to discord: " + response.code());
                 OneLineOfCode.logger.warn("Response body: " + response.body().string());
+                response.close(); return;
             } else OneLineOfCode.logger.info("Successfully pushed " + track.title + " to Discord.");
             response.close();
             

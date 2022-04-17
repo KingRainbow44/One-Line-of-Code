@@ -1,5 +1,6 @@
 package tech.xigam.onelineofcode.runnable;
 
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import tech.xigam.elixirapi.Bot;
 import tech.xigam.onelineofcode.objects.PresenceDetails;
@@ -22,17 +23,20 @@ public final class ElixirRefreshTask extends TimerTask {
                 RPCClient.client.sendRichPresence(RPCClient.presence.build());
                 return;
             }
-            
+
             if(!TrackUtil.isCached(track)) {
-                TrackUtil.pushTrackToDiscord(track);
+                try {
+                    TrackUtil.pushTrackToDiscord(track);
+                } catch (Exception ignored) { }
             }
-            
+
             var endsIn = Duration.ofMillis(track.length - track.position).toSeconds();
             var presence = new PresenceDetails()
                     .setEndTimestamp(OffsetDateTime.now().plusSeconds(endsIn))
                     .setDetails("Listening to " + track.title)
                     .setState("by " + track.author)
-                    .setLargeImage(TrackUtil.extractTrackId(track.uri), track.title);
+                    .setLargeImage(TrackUtil.extractTrackId(track.uri).toLowerCase(), track.title)
+                    .setSmallImage("kazuha", "From Guild: " + guild.getName());
             RPCClient.client.sendRichPresence(presence.build());
         }, this.guild, this.bot);
     }

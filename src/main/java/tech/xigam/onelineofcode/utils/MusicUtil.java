@@ -110,8 +110,8 @@ public final class MusicUtil {
                     var rsp = (GetPlayingTrackRequest.Response) response;
                     if(response.getResponseCode() == 200)
                         callback.accept(rsp.getAsTrack());
-                } catch (Exception ignored) {
-                    OneLineOfCode.logger.warn("Failed to get playing track from Elixir", ignored);
+                } catch (Exception exception) {
+                    OneLineOfCode.logger.warn("Failed to get playing track from Elixir", exception);
                     callback.accept(null);
                 }
             });

@@ -3,7 +3,10 @@ package tech.xigam.onelineofcode.objects;
 import com.jagrosh.discordipc.entities.RichPresence;
 import lombok.AllArgsConstructor;
 
+import javax.annotation.Nullable;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 public final class PresenceDetails {
@@ -22,12 +25,13 @@ public final class PresenceDetails {
     public String joinSecret;
     public String spectateSecret;
     public boolean instance;
+    public List<ExtendedPresence.Button> buttons = new ArrayList<>();
 
     public PresenceDetails() {
     }
 
-    public RichPresence build() {
-        return new RichPresence(this.state, this.details, this.startTimestamp, this.endTimestamp, this.largeImageKey, this.largeImageText, this.smallImageKey, this.smallImageText, this.partyId, this.partySize, this.partyMax, this.matchSecret, this.joinSecret, this.spectateSecret, this.instance);
+    public ExtendedPresence build() {
+        return new ExtendedPresence(this.state, this.details, this.startTimestamp, this.endTimestamp, this.largeImageKey, this.largeImageText, this.smallImageKey, this.smallImageText, this.partyId, this.partySize, this.partyMax, this.matchSecret, this.joinSecret, this.spectateSecret, this.buttons, this.instance);
     }
 
     public PresenceDetails setState(String state) {
@@ -89,6 +93,21 @@ public final class PresenceDetails {
 
     public PresenceDetails setSpectateSecret(String spectateSecret) {
         this.spectateSecret = spectateSecret;
+        return this;
+    }
+    
+    public PresenceDetails addButton(String label) {
+        return this.addButton(label, null);
+    }
+    
+    public PresenceDetails addButton(String label, @Nullable String url) {
+        var button = new ExtendedPresence.Button().setLabel(label);
+        if(url != null) button.setUrl(url);
+        return this.addButton(button);
+    }
+    
+    public PresenceDetails addButton(ExtendedPresence.Button button) {
+        this.buttons.add(button);
         return this;
     }
 
